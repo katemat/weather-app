@@ -51,10 +51,10 @@ h3 {
 
 a {
   color: var(--clr-accent);
-}
 
-a:hover {
-  color: var(--clr-accent-dark);
+  &:hover {
+    color: var(--clr-accent-dark);
+  }
 }
 
 .main-title {
@@ -80,9 +80,6 @@ a:hover {
   padding: 2em;
   max-width: 1000px;
   margin: 4em 0 0 4em;
-  display: -ms-grid;
   display: grid;
-  -ms-grid-columns: (1fr)[3];
-      grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 }
-/*# sourceMappingURL=main.css.map */
