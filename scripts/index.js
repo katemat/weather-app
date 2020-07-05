@@ -16,20 +16,51 @@ const windDirectionText = document.querySelector('[data-wind-direction-text]');
 const windDirectionArrow = document.querySelector(
   '[data-wind-direction-arrow]'
 );
+
+previousSolTemplate = document.querySelector('[data-previous-sol-template]');
+previousSolContainer = document.querySelector('[data-previous-sols]');
+
+const unitToggle = document.querySelector('[data-unit-toggle]');
+const metricRadio = document.getElementById('cel');
+const imperialRadio = document.getElementById('fah');
+
 let selectedSolIdx;
 
 getWeather().then((sols) => {
   selectedSolIdx = sols.length - 1;
   displaySelectedSol(sols);
+  displayPreviousSol(sols);
+  convertUnits();
+
+  unitToggle.addEventListener('click', () => {
+    let metricUnits = !isMetric();
+    metricRadio.checked = metricUnits;
+    imperialRadio.checked = !metricUnits;
+    displaySelectedSol(sols);
+    displayPreviousSol(sols);
+    convertUnits();
+  });
+
+  metricRadio.addEventListener('change', () => {
+    displaySelectedSol(sols);
+    displayPreviousSol(sols);
+    convertUnits();
+  });
+
+  imperialRadio.addEventListener('change', () => {
+    convertUnits();
+    displaySelectedSol(sols);
+    displayPreviousSol(sols);
+  });
 });
 
 function displaySelectedSol(sols) {
   const selectedSol = sols[selectedSolIdx];
   currentSol.innerHTML = selectedSol.sol;
   currentDate.innerHTML = displayDate(selectedSol.date);
-  currentTempHigh.innerHTML = selectedSol.maxTemp;
-  currentTempLow.innerHTML = selectedSol.minTemp;
-  windSpeed.innerHTML = selectedSol.windSpeed;
+  currentTempHigh.innerHTML = displayTemp(selectedSol.maxTemp);
+  currentTempLow.innerHTML = displayTemp(selectedSol.minTemp);
+  windSpeed.innerHTML = displayWindSpeed(selectedSol.windSpeed);
   windDirectionArrow.style.setProperty(
     '--direction',
     `${selectedSol.windDirectionDegrees}deg`
@@ -37,8 +68,53 @@ function displaySelectedSol(sols) {
   windDirectionText.innerHTML = selectedSol.windDirectionCardinal;
 }
 
+function displayPreviousSol(sols) {
+  previousSolContainer.innerHTML = '';
+  sols.forEach((solData, index) => {
+    const solContainer = previousSolTemplate.content.cloneNode(true);
+    solContainer.querySelector('[data-sol]').innerText = solData.sol;
+    solContainer.querySelector('[data-date]').innerText = displayDate(
+      solData.date
+    );
+    solContainer.querySelector('[data-temp-high]').innerText = displayTemp(
+      solData.maxTemp
+    );
+    solContainer.querySelector('[data-temp-low]').innerText = displayTemp(
+      solData.minTemp
+    );
+    solContainer
+      .querySelector('[data-select-button]')
+      .addEventListener('click', () => {
+        selectedSolIdx = index;
+        displaySelectedSol(sols);
+      });
+
+    previousSolContainer.appendChild(solContainer);
+  });
+}
+
 function displayDate(date) {
-  return date.toLocaleDateString(undefined, { day: 'numeric', month: 'long' });
+  return date.toLocaleDateString(undefined, {
+    day: 'numeric',
+    month: 'long',
+    weekday: 'short',
+  });
+}
+
+function displayTemp(temp) {
+  let returnTemp = temp;
+  if (!isMetric()) {
+    returnTemp = temp * (9 / 5) + 32;
+  }
+  return returnTemp.toFixed(0);
+}
+
+function displayWindSpeed(speed) {
+  let returnSpeed = speed;
+  if (!isMetric()) {
+    returnSpeed = speed / 1.609;
+  }
+  return returnSpeed.toFixed(1);
 }
 
 function getWeather() {
@@ -58,4 +134,19 @@ function getWeather() {
         };
       });
     });
+}
+
+function convertUnits() {
+  const speedUnits = document.querySelectorAll('[data-speed-unit]');
+  const tempUnits = document.querySelectorAll('[data-temp-unit]');
+  speedUnits.forEach((unit) => {
+    unit.innerText = isMetric() ? 'meters/s' : 'miles/s';
+  });
+  tempUnits.forEach((unit) => {
+    unit.innerText = isMetric() ? 'C' : 'F';
+  });
+}
+
+function isMetric() {
+  return metricRadio.checked;
 }
