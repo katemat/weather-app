@@ -1,7 +1,5 @@
 # Mars Weather App
 
----
-
 Do you want to check the current weather on Mars? You can do it now.
 
 🎇 Check the [current weather on Mars](http://funny-shoes.surge.sh/)
