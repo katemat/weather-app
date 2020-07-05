@@ -114,7 +114,7 @@ function displayWindSpeed(speed) {
   if (!isMetric()) {
     returnSpeed = speed / 1.609;
   }
-  return returnSpeed.toFixed(1);
+  return Math.round(returnSpeed);
 }
 
 function getWeather() {
