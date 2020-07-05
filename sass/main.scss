@@ -86,10 +86,12 @@ a {
   background: rgba(70, 68, 68, 0.6);
   padding: 2em;
   max-width: 1000px;
-  margin: 4em 0 0 4em;
+  margin: 4em auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 2em;
+  justify-content: center;
+  align-items: center;
 }
 
 .date {
