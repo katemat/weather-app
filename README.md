@@ -23,8 +23,8 @@ NB! For this project I used DEMO_KEY, so please take into account that there is 
 
 ## Screenshots
 
-![Main View ](/public/images/main1.png)
-![Previous Sol Weather](/public/images/main2.png)
+![Main View ](/images/main1.png)
+![Previous Sol Weather](/images/main2.png)
 
 ### Future plans
 
